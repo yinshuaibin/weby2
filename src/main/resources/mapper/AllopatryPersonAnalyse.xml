@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.AllopatryAnalyseMapper" >
+  <select id="findAllopatryAnalyse" resultType="java.util.HashMap">
+    SELECT A.person_id,(A.num + B.num) num from (SELECT  person_id ,count(person_id) num FROM tb_cluster_pass WHERE camera_ip in
+      <foreach item='item' index='index' collection='cameraIpsA' open='(' separator=',' close=')'> #{item} </foreach>
+    AND start_time &gt; #{beginTimeA} AND end_time &lt; #{endTimeA} group by person_id) A,
+    (SELECT  person_id ,count(person_id) num FROM tb_cluster_pass WHERE camera_ip in
+      <foreach item='item' index='index' collection='cameraIpsB' open='(' separator=',' close=')'> #{item} </foreach>
+    AND start_time &gt; #{beginTimeB} AND end_time &lt; #{endTimeB} group by person_id) B where A.person_id = B.person_id
+  </select>
+</mapper>

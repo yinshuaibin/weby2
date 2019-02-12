@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.BuKongInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ferret.bean.BuKongInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="relative" property="relative" jdbcType="VARCHAR" />
+    <result column="residence" property="residence" jdbcType="VARCHAR" />
+    <result column="room_number" property="roomNumber" jdbcType="VARCHAR" />
+    <result column="residence_type" property="residenceType" jdbcType="VARCHAR" />
+    <result column="landlord_idcard" property="landlordIdcard" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+    <result column="convenience_card_existed" property="convenienceCardExisted" jdbcType="VARCHAR" />
+    <result column="temp_residence_existed" property="tempResidenceExisted" jdbcType="VARCHAR" />
+    <result column="temp_residence_number" property="tempResidenceNumber" jdbcType="VARCHAR" />
+    <result column="from_and_when" property="fromAndWhen" jdbcType="VARCHAR" />
+    <result column="go_and_when" property="goAndWhen" jdbcType="VARCHAR" />
+    <result column="transport" property="transport" jdbcType="VARCHAR" />
+    <result column="date_checked" property="dateChecked" jdbcType="DATE" />
+    <result column="police_checked" property="policeChecked" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="image_path" property="imagePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, idcard, name, gender, address, telephone, relative, residence, room_number, residence_type, 
+    landlord_idcard, job, convenience_card_existed, temp_residence_existed, temp_residence_number, 
+    from_and_when, go_and_when, transport, date_checked, police_checked, comment, image_path
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_bukong_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_bukong_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ferret.bean.BuKongInfo" >
+    insert into tb_bukong_info (id, idcard, name, 
+      gender, address, telephone, 
+      relative, residence, room_number, 
+      residence_type, landlord_idcard, job, 
+      convenience_card_existed, temp_residence_existed, 
+      temp_residence_number, from_and_when, go_and_when, 
+      transport, date_checked, police_checked, 
+      comment, image_path)
+    values (#{id,jdbcType=INTEGER}, #{idcard,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{relative,jdbcType=VARCHAR}, #{residence,jdbcType=VARCHAR}, #{roomNumber,jdbcType=VARCHAR}, 
+      #{residenceType,jdbcType=VARCHAR}, #{landlordIdcard,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, 
+      #{convenienceCardExisted,jdbcType=VARCHAR}, #{tempResidenceExisted,jdbcType=VARCHAR}, 
+      #{tempResidenceNumber,jdbcType=VARCHAR}, #{fromAndWhen,jdbcType=VARCHAR}, #{goAndWhen,jdbcType=VARCHAR}, 
+      #{transport,jdbcType=VARCHAR}, #{dateChecked,jdbcType=DATE}, #{policeChecked,jdbcType=VARCHAR}, 
+      #{comment,jdbcType=VARCHAR}, #{imagePath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ferret.bean.BuKongInfo" >
+    insert into tb_bukong_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="relative != null" >
+        relative,
+      </if>
+      <if test="residence != null" >
+        residence,
+      </if>
+      <if test="roomNumber != null" >
+        room_number,
+      </if>
+      <if test="residenceType != null" >
+        residence_type,
+      </if>
+      <if test="landlordIdcard != null" >
+        landlord_idcard,
+      </if>
+      <if test="job != null" >
+        job,
+      </if>
+      <if test="convenienceCardExisted != null" >
+        convenience_card_existed,
+      </if>
+      <if test="tempResidenceExisted != null" >
+        temp_residence_existed,
+      </if>
+      <if test="tempResidenceNumber != null" >
+        temp_residence_number,
+      </if>
+      <if test="fromAndWhen != null" >
+        from_and_when,
+      </if>
+      <if test="goAndWhen != null" >
+        go_and_when,
+      </if>
+      <if test="transport != null" >
+        transport,
+      </if>
+      <if test="dateChecked != null" >
+        date_checked,
+      </if>
+      <if test="policeChecked != null" >
+        police_checked,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="imagePath != null" >
+        image_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="relative != null" >
+        #{relative,jdbcType=VARCHAR},
+      </if>
+      <if test="residence != null" >
+        #{residence,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNumber != null" >
+        #{roomNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="residenceType != null" >
+        #{residenceType,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordIdcard != null" >
+        #{landlordIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="convenienceCardExisted != null" >
+        #{convenienceCardExisted,jdbcType=VARCHAR},
+      </if>
+      <if test="tempResidenceExisted != null" >
+        #{tempResidenceExisted,jdbcType=VARCHAR},
+      </if>
+      <if test="tempResidenceNumber != null" >
+        #{tempResidenceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="fromAndWhen != null" >
+        #{fromAndWhen,jdbcType=VARCHAR},
+      </if>
+      <if test="goAndWhen != null" >
+        #{goAndWhen,jdbcType=VARCHAR},
+      </if>
+      <if test="transport != null" >
+        #{transport,jdbcType=VARCHAR},
+      </if>
+      <if test="dateChecked != null" >
+        #{dateChecked,jdbcType=DATE},
+      </if>
+      <if test="policeChecked != null" >
+        #{policeChecked,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="imagePath != null" >
+        #{imagePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ferret.bean.BuKongInfo" >
+    update tb_bukong_info
+    <set >
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="relative != null" >
+        relative = #{relative,jdbcType=VARCHAR},
+      </if>
+      <if test="residence != null" >
+        residence = #{residence,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNumber != null" >
+        room_number = #{roomNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="residenceType != null" >
+        residence_type = #{residenceType,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordIdcard != null" >
+        landlord_idcard = #{landlordIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        job = #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="convenienceCardExisted != null" >
+        convenience_card_existed = #{convenienceCardExisted,jdbcType=VARCHAR},
+      </if>
+      <if test="tempResidenceExisted != null" >
+        temp_residence_existed = #{tempResidenceExisted,jdbcType=VARCHAR},
+      </if>
+      <if test="tempResidenceNumber != null" >
+        temp_residence_number = #{tempResidenceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="fromAndWhen != null" >
+        from_and_when = #{fromAndWhen,jdbcType=VARCHAR},
+      </if>
+      <if test="goAndWhen != null" >
+        go_and_when = #{goAndWhen,jdbcType=VARCHAR},
+      </if>
+      <if test="transport != null" >
+        transport = #{transport,jdbcType=VARCHAR},
+      </if>
+      <if test="dateChecked != null" >
+        date_checked = #{dateChecked,jdbcType=DATE},
+      </if>
+      <if test="policeChecked != null" >
+        police_checked = #{policeChecked,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="imagePath != null" >
+        image_path = #{imagePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ferret.bean.BuKongInfo" >
+    update tb_bukong_info
+    set idcard = #{idcard,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      relative = #{relative,jdbcType=VARCHAR},
+      residence = #{residence,jdbcType=VARCHAR},
+      room_number = #{roomNumber,jdbcType=VARCHAR},
+      residence_type = #{residenceType,jdbcType=VARCHAR},
+      landlord_idcard = #{landlordIdcard,jdbcType=VARCHAR},
+      job = #{job,jdbcType=VARCHAR},
+      convenience_card_existed = #{convenienceCardExisted,jdbcType=VARCHAR},
+      temp_residence_existed = #{tempResidenceExisted,jdbcType=VARCHAR},
+      temp_residence_number = #{tempResidenceNumber,jdbcType=VARCHAR},
+      from_and_when = #{fromAndWhen,jdbcType=VARCHAR},
+      go_and_when = #{goAndWhen,jdbcType=VARCHAR},
+      transport = #{transport,jdbcType=VARCHAR},
+      date_checked = #{dateChecked,jdbcType=DATE},
+      police_checked = #{policeChecked,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      image_path = #{imagePath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

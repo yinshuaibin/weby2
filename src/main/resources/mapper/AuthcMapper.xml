@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.AuthcMapper" >
+  <resultMap id="BaseResultMap" type="com.ferret.bean.Authc" >
+    <result column="authority_id" property="authorityId" jdbcType="VARCHAR" />
+    <result column="authority_name" property="authorityName" jdbcType="VARCHAR" />
+    <result column="authority_url" property="authorityUrl" jdbcType="VARCHAR" />
+    <result column="authority_desc" property="authorityDesc" jdbcType="VARCHAR" />
+    <result column="authority_sequence" property="authoritySequence" jdbcType="INTEGER" />
+    <result column="enabled" property="enabled" jdbcType="BIT" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<insert id="insert" parameterType="com.ferret.bean.Authc" >-->
+    <!--insert into tb_authc (authority_id, authority_name, authority_url, -->
+      <!--authority_desc, authority_sequence, enabled, -->
+      <!--ui_Component_name)-->
+    <!--values (#{authorityId,jdbcType=VARCHAR}, #{authorityName,jdbcType=VARCHAR}, #{authorityUrl,jdbcType=VARCHAR}, -->
+      <!--#{authorityDesc,jdbcType=VARCHAR}, #{authoritySequence,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, -->
+      <!--#{menuName,jdbcType=VARCHAR})-->
+  <!--</insert>-->
+  <!--<insert id="insertSelective" parameterType="com.ferret.bean.Authc" >-->
+    <!--insert into tb_authc-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
+      <!--<if test="authorityId != null" >-->
+        <!--authority_id,-->
+      <!--</if>-->
+      <!--<if test="authorityName != null" >-->
+        <!--authority_name,-->
+      <!--</if>-->
+      <!--<if test="authorityUrl != null" >-->
+        <!--authority_url,-->
+      <!--</if>-->
+      <!--<if test="authorityDesc != null" >-->
+        <!--authority_desc,-->
+      <!--</if>-->
+      <!--<if test="authoritySequence != null" >-->
+        <!--authority_sequence,-->
+      <!--</if>-->
+      <!--<if test="enabled != null" >-->
+        <!--enabled,-->
+      <!--</if>-->
+      <!--<if test="menuName != null" >-->
+        <!--ui_Component_name,-->
+      <!--</if>-->
+    <!--</trim>-->
+    <!--<trim prefix="values (" suffix=")" suffixOverrides="," >-->
+      <!--<if test="authorityId != null" >-->
+        <!--#{authorityId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="authorityName != null" >-->
+        <!--#{authorityName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="authorityUrl != null" >-->
+        <!--#{authorityUrl,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="authorityDesc != null" >-->
+        <!--#{authorityDesc,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="authoritySequence != null" >-->
+        <!--#{authoritySequence,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="enabled != null" >-->
+        <!--#{enabled,jdbcType=BIT},-->
+      <!--</if>-->
+      <!--<if test="menuName != null" >-->
+        <!--#{menuName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</trim>-->
+  <!--</insert>-->
+</mapper>

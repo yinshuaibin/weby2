@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.HistoryPassMapper">
+    <resultMap id="BaseResultMap" type="com.ferret.bean.HistoryPass">
+        <id column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="CamID" property="camid" jdbcType="INTEGER"/>
+        <result column="WorkFlag" property="workflag" jdbcType="INTEGER"/>
+        <result column="GlobleFeatureID" property="globlefeatureid" jdbcType="BIGINT"/>
+        <result column="ImageDate" property="imagedate" jdbcType="DATE"/>
+        <result column="ImageTime" property="imagetime" jdbcType="TIME"/>
+        <result column="ImagePath" property="imagepath" jdbcType="VARCHAR"/>
+        <result column="FeaturePath" property="featurepath" jdbcType="VARCHAR"/>
+        <result column="Sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="Age" property="age" jdbcType="VARCHAR"/>
+        <result column="Nation" property="nation" jdbcType="VARCHAR"/>
+        <result column="Masks" property="masks" jdbcType="VARCHAR"/>
+        <result column="glasses" property="glasses" jdbcType="VARCHAR"/>
+        <result column="spare1" property="spare1" jdbcType="VARCHAR"/>
+        <result column="spare2" property="spare2" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID, CamID, WorkFlag, GlobleFeatureID, ImageDate, ImageTime, ImagePath, FeaturePath, 
+    Sex, Age, Nation, Masks, glasses, spare1, spare2
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_historypass
+        where ID = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_historypass
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+
+    <insert id="insert" parameterType="com.ferret.bean.HistoryPass">
+    insert into tb_historypass (ID, CamID, WorkFlag, 
+      GlobleFeatureID, ImageDate, ImageTime, 
+      ImagePath, FeaturePath, Sex, 
+      Age, Nation, Masks, 
+      glasses, spare1, spare2
+      )
+    values (#{id,jdbcType=BIGINT}, #{camid,jdbcType=INTEGER}, #{workflag,jdbcType=INTEGER}, 
+      #{globlefeatureid,jdbcType=BIGINT}, #{imagedate,jdbcType=DATE}, #{imagetime,jdbcType=TIME}, 
+      #{imagepath,jdbcType=VARCHAR}, #{featurepath,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{age,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, #{masks,jdbcType=VARCHAR}, 
+      #{glasses,jdbcType=VARCHAR}, #{spare1,jdbcType=VARCHAR}, #{spare2,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.ferret.bean.HistoryPass">
+        insert into tb_historypass
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="camid != null">
+                CamID,
+            </if>
+            <if test="workflag != null">
+                WorkFlag,
+            </if>
+            <if test="globlefeatureid != null">
+                GlobleFeatureID,
+            </if>
+            <if test="imagedate != null">
+                ImageDate,
+            </if>
+            <if test="imagetime != null">
+                ImageTime,
+            </if>
+            <if test="imagepath != null">
+                ImagePath,
+            </if>
+            <if test="featurepath != null">
+                FeaturePath,
+            </if>
+            <if test="sex != null">
+                Sex,
+            </if>
+            <if test="age != null">
+                Age,
+            </if>
+            <if test="nation != null">
+                Nation,
+            </if>
+            <if test="masks != null">
+                Masks,
+            </if>
+            <if test="glasses != null">
+                glasses,
+            </if>
+            <if test="spare1 != null">
+                spare1,
+            </if>
+            <if test="spare2 != null">
+                spare2,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="camid != null">
+                #{camid,jdbcType=INTEGER},
+            </if>
+            <if test="workflag != null">
+                #{workflag,jdbcType=INTEGER},
+            </if>
+            <if test="globlefeatureid != null">
+                #{globlefeatureid,jdbcType=BIGINT},
+            </if>
+            <if test="imagedate != null">
+                #{imagedate,jdbcType=DATE},
+            </if>
+            <if test="imagetime != null">
+                #{imagetime,jdbcType=TIME},
+            </if>
+            <if test="imagepath != null">
+                #{imagepath,jdbcType=VARCHAR},
+            </if>
+            <if test="featurepath != null">
+                #{featurepath,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="masks != null">
+                #{masks,jdbcType=VARCHAR},
+            </if>
+            <if test="glasses != null">
+                #{glasses,jdbcType=VARCHAR},
+            </if>
+            <if test="spare1 != null">
+                #{spare1,jdbcType=VARCHAR},
+            </if>
+            <if test="spare2 != null">
+                #{spare2,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ferret.bean.HistoryPass">
+        update tb_historypass
+        <set>
+            <if test="camid != null">
+                CamID = #{camid,jdbcType=INTEGER},
+            </if>
+            <if test="workflag != null">
+                WorkFlag = #{workflag,jdbcType=INTEGER},
+            </if>
+            <if test="globlefeatureid != null">
+                GlobleFeatureID = #{globlefeatureid,jdbcType=BIGINT},
+            </if>
+            <if test="imagedate != null">
+                ImageDate = #{imagedate,jdbcType=DATE},
+            </if>
+            <if test="imagetime != null">
+                ImageTime = #{imagetime,jdbcType=TIME},
+            </if>
+            <if test="imagepath != null">
+                ImagePath = #{imagepath,jdbcType=VARCHAR},
+            </if>
+            <if test="featurepath != null">
+                FeaturePath = #{featurepath,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                Sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                Age = #{age,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                Nation = #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="masks != null">
+                Masks = #{masks,jdbcType=VARCHAR},
+            </if>
+            <if test="glasses != null">
+                glasses = #{glasses,jdbcType=VARCHAR},
+            </if>
+            <if test="spare1 != null">
+                spare1 = #{spare1,jdbcType=VARCHAR},
+            </if>
+            <if test="spare2 != null">
+                spare2 = #{spare2,jdbcType=INTEGER},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ferret.bean.HistoryPass">
+    update tb_historypass
+    set CamID = #{camid,jdbcType=INTEGER},
+      WorkFlag = #{workflag,jdbcType=INTEGER},
+      GlobleFeatureID = #{globlefeatureid,jdbcType=BIGINT},
+      ImageDate = #{imagedate,jdbcType=DATE},
+      ImageTime = #{imagetime,jdbcType=TIME},
+      ImagePath = #{imagepath,jdbcType=VARCHAR},
+      FeaturePath = #{featurepath,jdbcType=VARCHAR},
+      Sex = #{sex,jdbcType=VARCHAR},
+      Age = #{age,jdbcType=VARCHAR},
+      Nation = #{nation,jdbcType=VARCHAR},
+      Masks = #{masks,jdbcType=VARCHAR},
+      glasses = #{glasses,jdbcType=VARCHAR},
+      spare1 = #{spare1,jdbcType=VARCHAR},
+      spare2 = #{spare2,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+    <resultMap id="historyPassDTO" type="com.ferret.dto.HistoryPassDTO">
+        <id column="GlobleFeatureID" property="featureId" jdbcType="INTEGER"/>
+        <result column="time" property="imageDateTime" jdbcType="VARCHAR"/>
+        <result column="ImagePath" property="imagepath" jdbcType="VARCHAR"/>
+        <result column="cameraName" property="cameraName" jdbcType="VARCHAR"/>
+        <association property="cameraInfo" javaType="CameraInfo" resultMap="com.ferret.dao.CameraInfoMapper.BaseResultMap"/>
+    </resultMap>
+    <select id="listHistoryPassDTO" resultMap="historyPassDTO" parameterType="java.util.Arrays">
+        SELECT h.GlobleFeatureID, CONCAT_WS(" ",h.ImageDate,h.ImageTime) as time ,h.ImagePath ,c.name as cameraName, c.*
+        FROM tb_historypass h, tb_camera_info c
+        WHERE h.GlobleFeatureID IN 
+        <foreach collection="array" item="item" open="(" separator="," close=")" >
+            #{item}
+        </foreach>
+        AND h.CamID = c.id
+    </select>
+
+
+</mapper>

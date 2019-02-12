@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.BuKongGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.ferret.bean.BuKongGroup" >
+    <id column="bk_group_id" property="bkGroupId" jdbcType="VARCHAR" />
+    <result column="bk_group_name" property="bkGroupName" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="deletereason" property="deletereason" jdbcType="VARCHAR" />
+    <result column="enabled" property="enabled" jdbcType="BIT" />
+    <result column="bk_role_id" property="bkRoleId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bk_group_id, bk_group_name, description, deletereason, enabled, bk_role_id
+  </sql>
+  
+  <select id="listByRoleId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List" />
+    FROM tb_bukong_group
+    WHERE bk_role_id = #{RoleId}
+  </select>
+
+
+  <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >-->
+    <!--select -->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from tb_bukong_group-->
+    <!--where bk_group_id = #{bkGroupId,jdbcType=VARCHAR}-->
+  <!--</select>-->
+  <!--<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >-->
+    <!--delete from tb_bukong_group-->
+    <!--where bk_group_id = #{bkGroupId,jdbcType=VARCHAR}-->
+  <!--</delete>-->
+  <!--<insert id="insert" parameterType="com.ferret.bean.BuKongGroup" >-->
+    <!--insert into tb_bukong_group (bk_group_id, bk_group_name, description, -->
+      <!--deletereason, enabled, bk_role_id-->
+      <!--)-->
+    <!--values (#{bkGroupId,jdbcType=VARCHAR}, #{bkGroupName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, -->
+      <!--#{deletereason,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{bkRoleId,jdbcType=VARCHAR}-->
+      <!--)-->
+  <!--</insert>-->
+  <!--<insert id="insertSelective" parameterType="com.ferret.bean.BuKongGroup" >-->
+    <!--insert into tb_bukong_group-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
+      <!--<if test="bkGroupId != null" >-->
+        <!--bk_group_id,-->
+      <!--</if>-->
+      <!--<if test="bkGroupName != null" >-->
+        <!--bk_group_name,-->
+      <!--</if>-->
+      <!--<if test="description != null" >-->
+        <!--description,-->
+      <!--</if>-->
+      <!--<if test="deletereason != null" >-->
+        <!--deletereason,-->
+      <!--</if>-->
+      <!--<if test="enabled != null" >-->
+        <!--enabled,-->
+      <!--</if>-->
+      <!--<if test="bkRoleId != null" >-->
+        <!--bk_role_id,-->
+      <!--</if>-->
+    <!--</trim>-->
+    <!--<trim prefix="values (" suffix=")" suffixOverrides="," >-->
+      <!--<if test="bkGroupId != null" >-->
+        <!--#{bkGroupId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="bkGroupName != null" >-->
+        <!--#{bkGroupName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="description != null" >-->
+        <!--#{description,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="deletereason != null" >-->
+        <!--#{deletereason,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="enabled != null" >-->
+        <!--#{enabled,jdbcType=BIT},-->
+      <!--</if>-->
+      <!--<if test="bkRoleId != null" >-->
+        <!--#{bkRoleId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</trim>-->
+  <!--</insert>-->
+  <!--<update id="updateByPrimaryKeySelective" parameterType="com.ferret.bean.BuKongGroup" >-->
+    <!--update tb_bukong_group-->
+    <!--<set >-->
+      <!--<if test="bkGroupName != null" >-->
+        <!--bk_group_name = #{bkGroupName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="description != null" >-->
+        <!--description = #{description,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="deletereason != null" >-->
+        <!--deletereason = #{deletereason,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="enabled != null" >-->
+        <!--enabled = #{enabled,jdbcType=BIT},-->
+      <!--</if>-->
+      <!--<if test="bkRoleId != null" >-->
+        <!--bk_role_id = #{bkRoleId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--where bk_group_id = #{bkGroupId,jdbcType=VARCHAR}-->
+  <!--</update>-->
+  <!--<update id="updateByPrimaryKey" parameterType="com.ferret.bean.BuKongGroup" >-->
+    <!--update tb_bukong_group-->
+    <!--set bk_group_name = #{bkGroupName,jdbcType=VARCHAR},-->
+      <!--description = #{description,jdbcType=VARCHAR},-->
+      <!--deletereason = #{deletereason,jdbcType=VARCHAR},-->
+      <!--enabled = #{enabled,jdbcType=BIT},-->
+      <!--bk_role_id = #{bkRoleId,jdbcType=VARCHAR}-->
+    <!--where bk_group_id = #{bkGroupId,jdbcType=VARCHAR}-->
+  <!--</update>-->
+</mapper>

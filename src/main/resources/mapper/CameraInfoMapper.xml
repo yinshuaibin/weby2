@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.CameraInfoMapper">
+    <resultMap id="BaseResultMap" type="com.ferret.bean.CameraInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cameraid" property="cameraId" jdbcType="VARCHAR"/>
+        <result column="cameraname" property="name" jdbcType="VARCHAR"/>
+        <result column="cameraip" property="ip" jdbcType="VARCHAR"/>
+        <result column="rtspurl" property="rtspUrl" jdbcType="VARCHAR"/>
+        <result column="type" property="manufacturer" jdbcType="VARCHAR"/>
+        <result column="status" property="enabled" jdbcType="BIT"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="INTEGER"/>
+        <result column="pwd" property="password" jdbcType="VARCHAR"/>
+        <result column="port" property="devicePort" jdbcType="INTEGER"/>
+        <result column="mark_dictionary" property="placeId" jdbcType="INTEGER"/>
+        <result column="x" property="longitude" jdbcType="VARCHAR"/>
+        <result column="y" property="latitude" jdbcType="VARCHAR"/>
+        <result column="frontgatewayid" property="netPort" jdbcType="VARCHAR"/>
+        <result column="isvirtual" property="isVirtual" jdbcType="INTEGER"/>
+        <result column="createtime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="description" jdbcType="VARCHAR"/>
+        <result column="groupid" property="groupId" jdbcType="VARCHAR"/>
+        <result column="direction" property="direction" jdbcType="INTEGER"/>
+        <result column="number" property="number" jdbcType="VARCHAR"/>
+        <association property="cameraGroup" javaType="com.ferret.bean.CameraGroup">
+            <result column="name" property="name" jdbcType="VARCHAR"></result>
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, cameraid, cameraname, cameraip, rtspurl, type, status, address, username, pwd,
+        port, mark_dictionary, x, y, frontgatewayid, isvirtual, createtime, remark,
+        groupid,direction,number
+    </sql>
+
+
+    <resultMap id="InfoResultMap" type="com.ferret.bean.CameraInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cameraid" property="cameraId" jdbcType="VARCHAR"/>
+        <result column="cameraname" property="name" jdbcType="VARCHAR"/>
+        <result column="cameraip" property="ip" jdbcType="VARCHAR"/>
+        <result column="rtspurl" property="rtspUrl" jdbcType="VARCHAR"/>
+        <result column="type" property="manufacturer" jdbcType="VARCHAR"/>
+        <result column="status" property="enabled" jdbcType="BIT"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="INTEGER"/>
+        <result column="pwd" property="password" jdbcType="VARCHAR"/>
+        <result column="port" property="devicePort" jdbcType="INTEGER"/>
+        <result column="mark_dictionary" property="placeId" jdbcType="INTEGER"/>
+        <result column="x" property="longitude" jdbcType="VARCHAR"/>
+        <result column="y" property="latitude" jdbcType="VARCHAR"/>
+        <result column="frontgatewayid" property="netPort" jdbcType="VARCHAR"/>
+        <result column="isvirtual" property="isVirtual" jdbcType="INTEGER"/>
+        <result column="createtime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="description" jdbcType="VARCHAR"/>
+        <result column="groupid" property="groupId" jdbcType="VARCHAR"/>
+        <result column="direction" property="direction" jdbcType="INTEGER"/>
+        <result column="number" property="number" jdbcType="VARCHAR"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"></result>
+    </resultMap>
+
+    <select id="findAllCameraInfo" resultMap="InfoResultMap" >
+        select g.name as group_name ,i.*
+        from tb_camera_group g left join tb_camera_info i
+        on g.number = i.group_id
+        order by i.id ASC
+    </select>
+
+    <select id="listCamerasByRoleId" resultMap="InfoResultMap" parameterType="java.util.List">
+        select x.*,y.name placeName from (
+          SELECT c.*, g.name as group_name
+          FROM
+          (
+            SELECT <include refid="Base_Column_List"/>
+            FROM jh_camera
+            WHERE
+            <foreach collection="list" item="item" separator="or" >
+                `number` LIKE CONCAT(CONCAT('C',#{item}),'%')
+            </foreach>
+          ) c, tb_camera_group g
+          WHERE c.groupid = g.number
+          ORDER BY c.id ASC)
+        x LEFT JOIN tb_dictionary y ON x.mark_dictionary = y.number
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List"/>
+    from jh_camera
+    where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_camera_info
+    where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.ferret.bean.CameraInfo">
+    insert into tb_camera_info (id, number, group_id,
+    code, name, ip, longitude,
+    latitude, direction, manufacturer,
+    video_code, device_port, net_port,
+    username, password, description,
+    add_time, enabled, place_id
+    )
+    values (#{id,jdbcType=INTEGER}, #{number,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR},
+    #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE},
+    #{latitude,jdbcType=DOUBLE}, #{direction,jdbcType=INTEGER}, #{manufacturer,jdbcType=VARCHAR},
+    #{videoCode,jdbcType=VARCHAR}, #{devicePort,jdbcType=INTEGER}, #{netPort,jdbcType=INTEGER},
+    #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+    #{addTime,jdbcType=TIMESTAMP}, #{enabled,jdbcType=BIT}, #{placeId,jdbcType=VARCHAR}
+    )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.ferret.bean.CameraInfo">
+    insert into tb_camera_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    <if test="id != null">
+    id,
+    </if>
+    <if test="number != null">
+    number,
+    </if>
+    <if test="groupId != null">
+    group_id,
+    </if>
+    <if test="code != null">
+    code,
+    </if>
+    <if test="name != null">
+    name,
+    </if>
+    <if test="ip != null">
+    ip,
+    </if>
+    <if test="longitude != null">
+    longitude,
+    </if>
+    <if test="latitude != null">
+    latitude,
+    </if>
+    <if test="direction != null">
+    direction,
+    </if>
+    <if test="manufacturer != null">
+    manufacturer,
+    </if>
+    <if test="videoCode != null">
+    video_code,
+    </if>
+    <if test="devicePort != null">
+    device_port,
+    </if>
+    <if test="netPort != null">
+    net_port,
+    </if>
+    <if test="username != null">
+    username,
+    </if>
+    <if test="password != null">
+    password,
+    </if>
+    <if test="description != null">
+    description,
+    </if>
+    <if test="addTime != null">
+    add_time,
+    </if>
+    <if test="enabled != null">
+    enabled,
+    </if>
+    <if test="placeId != null">
+    place_id,
+    </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    <if test="id != null">
+    #{id,jdbcType=INTEGER},
+    </if>
+    <if test="number != null">
+    #{number,jdbcType=VARCHAR},
+    </if>
+    <if test="groupId != null">
+    #{groupId,jdbcType=VARCHAR},
+    </if>
+    <if test="code != null">
+    #{code,jdbcType=VARCHAR},
+    </if>
+    <if test="name != null">
+    #{name,jdbcType=VARCHAR},
+    </if>
+    <if test="ip != null">
+    #{ip,jdbcType=VARCHAR},
+    </if>
+    <if test="longitude != null">
+    #{longitude,jdbcType=DOUBLE},
+    </if>
+    <if test="latitude != null">
+    #{latitude,jdbcType=DOUBLE},
+    </if>
+    <if test="direction != null">
+    #{direction,jdbcType=INTEGER},
+    </if>
+    <if test="manufacturer != null">
+    #{manufacturer,jdbcType=VARCHAR},
+    </if>
+    <if test="videoCode != null">
+    #{videoCode,jdbcType=VARCHAR},
+    </if>
+    <if test="devicePort != null">
+    #{devicePort,jdbcType=INTEGER},
+    </if>
+    <if test="netPort != null">
+    #{netPort,jdbcType=INTEGER},
+    </if>
+    <if test="username != null">
+    #{username,jdbcType=VARCHAR},
+    </if>
+    <if test="password != null">
+    #{password,jdbcType=VARCHAR},
+    </if>
+    <if test="description != null">
+    #{description,jdbcType=VARCHAR},
+    </if>
+    <if test="addTime != null">
+    #{addTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="enabled != null">
+    #{enabled,jdbcType=BIT},
+    </if>
+    <if test="placeId != null">
+    #{placeId,jdbcType=VARCHAR},
+    </if>
+    </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ferret.bean.CameraInfo">
+    update tb_camera_info
+    <set>
+    <if test="number != null">
+    number = #{number,jdbcType=VARCHAR},
+    </if>
+    <if test="groupId != null">
+    group_id = #{groupId,jdbcType=VARCHAR},
+    </if>
+    <if test="code != null">
+    code = #{code,jdbcType=VARCHAR},
+    </if>
+    <if test="name != null">
+    name = #{name,jdbcType=VARCHAR},
+    </if>
+    <if test="ip != null">
+    ip = #{ip,jdbcType=VARCHAR},
+    </if>
+    <if test="longitude != null">
+    longitude = #{longitude,jdbcType=DOUBLE},
+    </if>
+    <if test="latitude != null">
+    latitude = #{latitude,jdbcType=DOUBLE},
+    </if>
+    <if test="direction != null">
+    direction = #{direction,jdbcType=INTEGER},
+    </if>
+    <if test="manufacturer != null">
+    manufacturer = #{manufacturer,jdbcType=VARCHAR},
+    </if>
+    <if test="videoCode != null">
+    video_code = #{videoCode,jdbcType=VARCHAR},
+    </if>
+    <if test="devicePort != null">
+    device_port = #{devicePort,jdbcType=INTEGER},
+    </if>
+    <if test="netPort != null">
+    net_port = #{netPort,jdbcType=INTEGER},
+    </if>
+    <if test="username != null">
+    username = #{username,jdbcType=VARCHAR},
+    </if>
+    <if test="password != null">
+    password = #{password,jdbcType=VARCHAR},
+    </if>
+    <if test="description != null">
+    description = #{description,jdbcType=VARCHAR},
+    </if>
+    <if test="addTime != null">
+    add_time = #{addTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="enabled != null">
+    enabled = #{enabled,jdbcType=BIT},
+    </if>
+    <if test="placeId != null">
+    place_id = #{placeId,jdbcType=VARCHAR},
+    </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ferret.bean.CameraInfo">
+
+    update tb_camera_info
+    set number = #{number,jdbcType=VARCHAR},
+    group_id = #{groupId,jdbcType=VARCHAR},
+    code = #{code,jdbcType=VARCHAR},
+    name = #{name,jdbcType=VARCHAR},
+    ip = #{ip,jdbcType=VARCHAR},
+    longitude = #{longitude,jdbcType=DOUBLE},
+    latitude = #{latitude,jdbcType=DOUBLE},
+    direction = #{direction,jdbcType=INTEGER},
+    manufacturer = #{manufacturer,jdbcType=VARCHAR},
+    video_code = #{videoCode,jdbcType=VARCHAR},
+    device_port = #{devicePort,jdbcType=INTEGER},
+    net_port = #{netPort,jdbcType=INTEGER},
+    username = #{username,jdbcType=VARCHAR},
+    password = #{password,jdbcType=VARCHAR},
+    description = #{description,jdbcType=VARCHAR},
+    add_time = #{addTime,jdbcType=TIMESTAMP},
+    enabled = #{enabled,jdbcType=BIT},
+    place_id = #{placeId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="listIdsByNumbers" parameterType="java.util.Arrays" resultType="java.lang.Integer">
+    SELECT id FROM tb_camera_info
+    WHERE
+    <foreach collection="array" item="number" index="index" open="" separator="or" close="">
+    <choose>
+    <when test="number.length == 19">
+    `number` LIKE concat(#{number},'%')
+    </when>
+    <otherwise>
+    `number` LIKE concat(concat('C',#{number}),'%')
+    </otherwise>
+    </choose>
+    </foreach>
+    </select>
+</mapper>

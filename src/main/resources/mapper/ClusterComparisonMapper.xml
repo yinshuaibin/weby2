@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.ClusterComparisonDao" >
+  <insert id="insertTaskPersons" parameterType="java.util.List">
+    insert tb_cluster_comparison values
+        <foreach collection="list" item="cluster" index="index" separator=",">
+            (null,#{cluster.personId},#{cluster.txId})
+        </foreach>
+  </insert>
+
+</mapper>

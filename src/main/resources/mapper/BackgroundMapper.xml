@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 背景图mapper，暂时无用 -->
+<mapper namespace="com.ferret.dao.BackgroundMapper" >
+  <resultMap id="BaseResultMap" type="com.ferret.bean.Background" >
+    <id column="historypass_id" property="historypassId" jdbcType="INTEGER" />
+    <result column="camera_id" property="cameraId" jdbcType="INTEGER" />
+    <result column="pass_time" property="passTime" jdbcType="TIMESTAMP" />
+    <result column="image_path" property="imagePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    historypass_id, camera_id, pass_time, image_path
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_backgroud
+    where historypass_id = #{historypassId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_backgroud
+    where historypass_id = #{historypassId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ferret.bean.Background" >
+    insert into tb_backgroud (historypass_id, camera_id, pass_time, 
+      image_path)
+    values (#{historypassId,jdbcType=INTEGER}, #{cameraId,jdbcType=INTEGER}, #{passTime,jdbcType=TIMESTAMP}, 
+      #{imagePath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ferret.bean.Background" >
+    insert into tb_backgroud
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="historypassId != null" >
+        historypass_id,
+      </if>
+      <if test="cameraId != null" >
+        camera_id,
+      </if>
+      <if test="passTime != null" >
+        pass_time,
+      </if>
+      <if test="imagePath != null" >
+        image_path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="historypassId != null" >
+        #{historypassId,jdbcType=INTEGER},
+      </if>
+      <if test="cameraId != null" >
+        #{cameraId,jdbcType=INTEGER},
+      </if>
+      <if test="passTime != null" >
+        #{passTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="imagePath != null" >
+        #{imagePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ferret.bean.Background" >
+    update tb_backgroud
+    <set >
+      <if test="cameraId != null" >
+        camera_id = #{cameraId,jdbcType=INTEGER},
+      </if>
+      <if test="passTime != null" >
+        pass_time = #{passTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="imagePath != null" >
+        image_path = #{imagePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where historypass_id = #{historypassId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ferret.bean.Background" >
+    update tb_backgroud
+    set camera_id = #{cameraId,jdbcType=INTEGER},
+      pass_time = #{passTime,jdbcType=TIMESTAMP},
+      image_path = #{imagePath,jdbcType=VARCHAR}
+    where historypass_id = #{historypassId,jdbcType=INTEGER}
+  </update>
+</mapper>

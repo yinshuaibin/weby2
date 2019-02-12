@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.ferret.bean.Role" >
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+    <result column="enabled" property="enabled" jdbcType="BIT" />
+  </resultMap>
+  <!--<insert id="insert" parameterType="com.ferret.bean.Role" >-->
+    <!--insert into tb_role (role_id, role_name, role_desc, -->
+      <!--enabled)-->
+    <!--values (#{roleId,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, #{roleDesc,jdbcType=VARCHAR}, -->
+      <!--#{enabled,jdbcType=BIT})-->
+  <!--</insert>-->
+  <!--<insert id="insertSelective" parameterType="com.ferret.bean.Role" >-->
+    <!--insert into tb_role-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
+      <!--<if test="roleId != null" >-->
+        <!--role_id,-->
+      <!--</if>-->
+      <!--<if test="roleName != null" >-->
+        <!--role_name,-->
+      <!--</if>-->
+      <!--<if test="roleDesc != null" >-->
+        <!--role_desc,-->
+      <!--</if>-->
+      <!--<if test="enabled != null" >-->
+        <!--enabled,-->
+      <!--</if>-->
+    <!--</trim>-->
+    <!--<trim prefix="values (" suffix=")" suffixOverrides="," >-->
+      <!--<if test="roleId != null" >-->
+        <!--#{roleId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="roleName != null" >-->
+        <!--#{roleName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="roleDesc != null" >-->
+        <!--#{roleDesc,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="enabled != null" >-->
+        <!--#{enabled,jdbcType=BIT},-->
+      <!--</if>-->
+    <!--</trim>-->
+  <!--</insert>-->
+</mapper>

@@ -1,0 +1,68 @@
+server:
+  port: 8090
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.1.105:3306/db_checkface?characterEncoding=utf8&useSSL=false
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialize: true
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+#pagehelper分页插件配置
+pagehelper:
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  helper-dialect: mysql
+
+#上传文件/图片的保存路径,替换url路径
+image:
+  prefix:
+    uploadDir:
+    uploadUrl:
+    historyDir: //192.168.1.105/ftpdata
+    historyUrl: http://192.168.1.105:8080/face
+    bukongDir: D:/ftpdata/imageBK
+    bukongUrl: http://192.168.1.105:8080/face
+
+socket:
+# 服务端通过tcp连接
+  tcp:
+    ip: 192.168.1.105
+    port:
+      monitor: 6901
+      alarm: 4233
+      #bukong: 9995
+    heartbeat: 30
+# web端通过http连接.
+  web:
+    url: /stomp
+    destination-prefix:
+      - /topic
+      - /user
+
+# 下划线到驼峰形式的映射
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.ferret.bean
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+webservice:
+  featureUrl: http://192.168.1.105:8088/face/featureExt
+  wsdlUrl: http://192.168.1.105/DynaService.asmx?wsdl

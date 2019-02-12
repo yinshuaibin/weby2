@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.RealTimeAlarmMapper">
+    <resultMap id="BaseResultMap" type="com.ferret.bean.RealTimeAlarm">
+        <id column="alarm_id" property="alarmId" jdbcType="INTEGER"/>
+        <result column="bk_id" property="bkId" jdbcType="INTEGER"/>
+        <result column="bk_image_path" property="bkImagePath" jdbcType="VARCHAR"/>
+        <result column="alarm_image_path" property="alarmImagePath" jdbcType="VARCHAR"/>
+        <result column="alarm_time" property="alarmTime" jdbcType="VARCHAR"/>
+        <result column="camera_id" property="cameraId" jdbcType="INTEGER"/>
+        <result column="similar" property="similar" jdbcType="REAL"/>
+        <result column="background_image_id" property="backgroundImageId" jdbcType="INTEGER"/>
+        <result column="video_id" property="videoId" jdbcType="INTEGER"/>
+        <result column="sample_flag" property="sampleFlag" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="confirm_time" property="confirmTime" jdbcType="TIMESTAMP"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="spare" property="spare" jdbcType="VARCHAR"/>
+        <result column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="fid_dy" property="fidDY" jdbcType="INTEGER"/>
+        <result column="fid_bk" property="fidBK" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, alarmid, controlpeopleid, controltypeid, name, sex, cardnumber, alarmpicid,
+    cameraid, status, handletype, handleremark, score, createtime, managerid,managername,
+    managetime,snappicpath,snappicbgpath,peoplepicpath,arcscore,projectid,remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_realtime_alarm
+        where alarm_id = #{alarmId,jdbcType=INTEGER}
+    </select>
+
+	<!-- y  0716-->
+    <resultMap id="RealTimeAlarmInfo" type="com.ferret.bean.RealTimeAlarm">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="alarmid" property="alarmId" jdbcType="BIGINT"/>
+        <result column="controlpeopleid" property="bkId" jdbcType="BIGINT"/>
+        <result column="controltypeid" property="bkGroupId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="cardnumber" property="cardNumber" jdbcType="VARCHAR"/>
+        <result column="alarmpicid" property="alarmPicId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="handletype" property="handleType" jdbcType="INTEGER"/>
+        <result column="handleremark" property="handleremark" jdbcType="VARCHAR"/>
+        <result column="score" property="similar" jdbcType="VARCHAR"/>
+        <result column="createtime" property="alarmTime" jdbcType="TIMESTAMP"/>
+        <result column="managerid" property="managerId" jdbcType="BIGINT"/>
+        <result column="managername" property="managerName" jdbcType="VARCHAR"/>
+        <result column="managetime" property="manageTime" jdbcType="TIMESTAMP"/>
+        <result column="snappicbgpath" property="backgroundImagePath" jdbcType="VARCHAR"/>
+        <result column="snappicpath" property="alarmImagePath" jdbcType="VARCHAR"/>
+        <result column="cameraid" property="cameraId" jdbcType="VARCHAR"/>
+        <result column="peoplepicpath" property="peoplepicpath" jdbcType="VARCHAR"/>
+        <result column="arcscore" property="arcscore" jdbcType="VARCHAR"/>
+        <result column="projectid" property="projectId" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="cameraname" property="cameraName" jdbcType="VARCHAR"/>
+        <result column="conreason" property="reason" jdbcType="VARCHAR"/>
+        <result column="x" property="longitude" jdbcType="VARCHAR"/>
+        <result column="y" property="latitude" jdbcType="VARCHAR"/>
+        <result column="picpath" property="bkImagePath" jdbcType="VARCHAR"/>
+        <result column="bkName" property="bkName" jdbcType="VARCHAR"/>
+        <result column="idCard" property="idCard" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="listAlarmsByBkId" resultMap="RealTimeAlarmInfo" parameterType="java.lang.Integer">
+        SELECT ra.alarmid as alarmid,ra.bk_id,ra.bk_image_path,ra.alarm_image_path, ra.alarm_time,ra.camera_id, ra.similar, ra.status
+        , ra.sample_flag, ra.background_image_id, ra.uuid, ra.fid_dy, ra.fid_bk, bk.reason, ci.name,ci.longitude,ci.latitude
+        FROM tb_realtime_alarm ra
+        LEFT JOIN tb_bukong bk ON ra.bk_id = bk.bk_id
+        LEFT JOIN tb_camera_info ci ON ra.camera_id = ci.id
+        WHERE ra.bk_id = #{bkId} ORDER BY ra.alarm_time DESC
+    </select>
+
+	<!-- y 0716 -->
+    <select id="listByQueryDTO" resultMap="RealTimeAlarmInfo" parameterType="com.ferret.dto.AlarmQueryDTO">
+        SELECT
+        ra.id,ra.alarmid,ra.controlpeopleid,ra.controltypeid,ra.name,ra.sex,ra.cardnumber,ra.alarmpicid,ra.status,ra.handletype,
+        ra.handleremark,ra.score,SUBSTRING(ra.createtime,1,19) as createtime,ra.managerid,ra.managername,SUBSTRING(ra.managetime,1,19) as managetime,
+        ra.snappicbgpath, ra.snappicpath, ra.cameraid,ra.peoplepicpath,ra.arcscore,ra.projectid,ra.remark,
+        ci.cameraname,ci.x,ci.y, bk.picpath,bk.conreason,bk.name as bkName,bk.cardnumber as idCard
+        FROM
+        ( SELECT
+        <include refid="Base_Column_List"/> , DATE_FORMAT(createtime,'%Y-%c-%d %h:%i') minite
+        FROM jh_alarm
+        WHERE 1=1
+        <if test="beginTime != null ">
+            AND createtime &gt; #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND createtime &lt;= #{endTime}
+        </if>
+        <if test="reason != null and reason != ''">
+            AND remark like concat( '%' , #{reason} , '%' )
+        </if>
+        <if test="cameraNumbers != null">
+            AND alarmid IN (SELECT alarmid from jh_camera WHERE
+            <foreach collection="cameraNumbers" item="item" separator="or">
+                <choose>
+                    <when test='item.contains("C")'>
+                        `number` like concat(#{item},'%')
+                    </when>
+                    <otherwise>
+                        `number` like concat(concat('C',#{item}),'%')
+                    </otherwise>
+                </choose>
+            </foreach>
+            )
+        </if>
+        GROUP BY controlpeopleid, minite
+        ) ra
+        LEFT JOIN jh_camera ci ON ra.cameraid = ci.cameraid
+        LEFT JOIN jh_controlpeople bk ON ra.controlpeopleid = bk.id
+        ORDER BY createtime DESC
+    </select>
+
+    <select id="listBKIdsByQueryDTO" parameterType="com.ferret.dto.AlarmQueryDTO" resultType="java.util.HashMap">
+        SELECT bk_id as bkId, count(bk_id) as amount , DATE_FORMAT(alarm_time,'%Y-%c-%d %h:%i') minite
+        FROM tb_realtime_alarm
+        WHERE
+        <if test="beginTime != null">
+            alarm_time &gt; #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND alarm_time &lt; #{endTime}
+        </if>
+        <if test="reason != null and reason != ''">
+            AND reason like concat( '%' , #{reason} , '%' )
+        </if>
+        <if test="cameraNumbers != null">
+            AND camera_id IN (SELECT id from tb_camera_info WHERE
+            <foreach collection="cameraNumbers" item="item" separator="or">
+                <choose>
+                    <when test='item.contains("C")'>
+                        `number` like concat(#{item},'%')
+                    </when>
+                    <otherwise>
+                        `number` like concat(concat('C',#{item}),'%')
+                    </otherwise>
+                </choose>
+            </foreach>
+            )
+        </if>
+        GROUP BY bk_id, minite
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_realtime_alarm
+    where alarm_id = #{alarmId,jdbcType=INTEGER}
+  </delete>
+
+    <!-- 写报警信息由后台C++服务-->
+   <!-- <insert id="insert" parameterType="com.ferret.bean.RealTimeAlarm">-->
+    <!--insert into tb_realtime_alarm (alarm_id, bk_id, bk_image_path, -->
+      <!--alarm_image_path, alarm_time, camera_id, -->
+      <!--similar, background_image_id, video_id, -->
+      <!--sample_flag, status, confirm_time, -->
+      <!--user_id, spare)-->
+    <!--values (#{alarmId,jdbcType=INTEGER}, #{bkId,jdbcType=INTEGER}, #{bkImagePath,jdbcType=VARCHAR}, -->
+      <!--#{alarmImagePath,jdbcType=VARCHAR}, #{alarmTime,jdbcType=TIMESTAMP}, #{cameraId,jdbcType=INTEGER}, -->
+      <!--#{similar,jdbcType=REAL}, #{backgroundImageId,jdbcType=INTEGER}, #{videoId,jdbcType=INTEGER}, -->
+      <!--#{sampleFlag,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{confirmTime,jdbcType=TIMESTAMP}, -->
+      <!--#{userId,jdbcType=INTEGER}, #{spare,jdbcType=VARCHAR})-->
+    <!--</insert>-->
+    <!--<insert id="insertSelective" parameterType="com.ferret.bean.RealTimeAlarm">-->
+        <!--insert into tb_realtime_alarm-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="alarmId != null">-->
+                <!--alarm_id,-->
+            <!--</if>-->
+            <!--<if test="bkId != null">-->
+                <!--bk_id,-->
+            <!--</if>-->
+            <!--<if test="bkImagePath != null">-->
+                <!--bk_image_path,-->
+            <!--</if>-->
+            <!--<if test="alarmImagePath != null">-->
+                <!--alarm_image_path,-->
+            <!--</if>-->
+            <!--<if test="alarmTime != null">-->
+                <!--alarm_time,-->
+            <!--</if>-->
+            <!--<if test="cameraId != null">-->
+                <!--camera_id,-->
+            <!--</if>-->
+            <!--<if test="similar != null">-->
+                <!--similar,-->
+            <!--</if>-->
+            <!--<if test="backgroundImageId != null">-->
+                <!--background_image_id,-->
+            <!--</if>-->
+            <!--<if test="videoId != null">-->
+                <!--video_id,-->
+            <!--</if>-->
+            <!--<if test="sampleFlag != null">-->
+                <!--sample_flag,-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--status,-->
+            <!--</if>-->
+            <!--<if test="confirmTime != null">-->
+                <!--confirm_time,-->
+            <!--</if>-->
+            <!--<if test="userId != null">-->
+                <!--user_id,-->
+            <!--</if>-->
+            <!--<if test="spare != null">-->
+                <!--spare,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="alarmId != null">-->
+                <!--#{alarmId,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="bkId != null">-->
+                <!--#{bkId,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="bkImagePath != null">-->
+                <!--#{bkImagePath,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="alarmImagePath != null">-->
+                <!--#{alarmImagePath,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="alarmTime != null">-->
+                <!--#{alarmTime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="cameraId != null">-->
+                <!--#{cameraId,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="similar != null">-->
+                <!--#{similar,jdbcType=REAL},-->
+            <!--</if>-->
+            <!--<if test="backgroundImageId != null">-->
+                <!--#{backgroundImageId,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="videoId != null">-->
+                <!--#{videoId,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="sampleFlag != null">-->
+                <!--#{sampleFlag,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="status != null">-->
+                <!--#{status,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="confirmTime != null">-->
+                <!--#{confirmTime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="userId != null">-->
+                <!--#{userId,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="spare != null">-->
+                <!--#{spare,jdbcType=VARCHAR},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.ferret.bean.RealTimeAlarm">
+        update tb_realtime_alarm
+        <set>
+            <if test="bkId != null">
+                bk_id = #{bkId,jdbcType=INTEGER},
+            </if>
+            <if test="bkImagePath != null">
+                bk_image_path = #{bkImagePath,jdbcType=VARCHAR},
+            </if>
+            <if test="alarmImagePath != null">
+                alarm_image_path = #{alarmImagePath,jdbcType=VARCHAR},
+            </if>
+            <if test="alarmTime != null">
+                alarm_time = #{alarmTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cameraId != null">
+                camera_id = #{cameraId,jdbcType=INTEGER},
+            </if>
+            <if test="similar != null">
+                similar = #{similar,jdbcType=REAL},
+            </if>
+            <if test="backgroundImageId != null">
+                background_image_id = #{backgroundImageId,jdbcType=INTEGER},
+            </if>
+            <if test="videoId != null">
+                video_id = #{videoId,jdbcType=INTEGER},
+            </if>
+            <if test="sampleFlag != null">
+                sample_flag = #{sampleFlag,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="confirmTime != null">
+                confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="spare != null">
+                spare = #{spare,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where alarm_id = #{alarmId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ferret.bean.RealTimeAlarm">
+    update tb_realtime_alarm
+    set bk_id = #{bkId,jdbcType=INTEGER},
+      bk_image_path = #{bkImagePath,jdbcType=VARCHAR},
+      alarm_image_path = #{alarmImagePath,jdbcType=VARCHAR},
+      alarm_time = #{alarmTime,jdbcType=TIMESTAMP},
+      camera_id = #{cameraId,jdbcType=INTEGER},
+      similar = #{similar,jdbcType=REAL},
+      background_image_id = #{backgroundImageId,jdbcType=INTEGER},
+      video_id = #{videoId,jdbcType=INTEGER},
+      sample_flag = #{sampleFlag,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=INTEGER},
+      spare = #{spare,jdbcType=VARCHAR}
+    where alarm_id = #{alarmId,jdbcType=INTEGER}
+  </update>
+</mapper>

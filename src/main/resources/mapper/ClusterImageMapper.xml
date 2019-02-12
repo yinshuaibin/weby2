@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.ClusterImgMapper" >
+  <resultMap id="BaseResultMap" type="com.ferret.bean.ClusterImage" >
+    <result column="person_id" property="personId" jdbcType="INTEGER" />
+    <result column="feature_id" property="featureId" jdbcType="INTEGER" />
+    <result column="image_path" property="imagePath" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--<insert id="insert" parameterType="com.ferret.bean.ClusterImage" >-->
+    <!--insert into tb_cluster_image (person_id, feature_id, image_path, -->
+      <!--create_time)-->
+    <!--values (#{personId,jdbcType=INTEGER}, #{featureId,jdbcType=INTEGER}, #{imagePath,jdbcType=VARCHAR}, -->
+      <!--#{createTime,jdbcType=TIMESTAMP})-->
+  <!--</insert>-->
+  <!--<insert id="insertSelective" parameterType="com.ferret.bean.ClusterImage" >-->
+    <!--insert into tb_cluster_image-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
+      <!--<if test="personId != null" >-->
+        <!--person_id,-->
+      <!--</if>-->
+      <!--<if test="featureId != null" >-->
+        <!--feature_id,-->
+      <!--</if>-->
+      <!--<if test="imagePath != null" >-->
+        <!--image_path,-->
+      <!--</if>-->
+      <!--<if test="createTime != null" >-->
+        <!--create_time,-->
+      <!--</if>-->
+    <!--</trim>-->
+    <!--<trim prefix="values (" suffix=")" suffixOverrides="," >-->
+      <!--<if test="personId != null" >-->
+        <!--#{personId,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="featureId != null" >-->
+        <!--#{featureId,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="imagePath != null" >-->
+        <!--#{imagePath,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="createTime != null" >-->
+        <!--#{createTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+    <!--</trim>-->
+  <!--</insert>-->
+  <!--<update id="perfectinformation" parameterType="java.util.List">
+    update tb_cluster
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="idcard = case" suffix="end,">
+        <foreach collection="list" item="cluster" index="index">
+          <if test="cluster.idCard !=null ">
+            when person_id=#{cluster.personId,jdbcType=VARCHAR} then #{cluster.idCard,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="name = case" suffix="end,">
+        <foreach collection="list" item="cluster" index="index">
+          <if test="cluster.name !=null ">
+            when person_id=#{cluster.personId,jdbcType=VARCHAR} then #{cluster.name,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="represent_img5 = case" suffix="end,">
+        <foreach collection="list" item="cluster" index="index">
+          <if test="cluster.represent_img5 !=null ">
+            when person_id=#{cluster.personId,jdbcType=VARCHAR} then #{cluster.represent_img5,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where person_id in
+    <foreach collection="list" index="index" item="cluster" separator="," open="(" close=")">
+        #{cluster.personId,jdbcType=VARCHAR}
+    </foreach>
+  </update>-->
+</mapper>

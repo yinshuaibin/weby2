@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ferret.dao.BuKongMapper">
+    <resultMap id="BaseResultMap" type="com.ferret.bean.BuKong">
+        <!--根据zwc修改数据库中yyid字段,此处跟着修改  y  0814-->
+        <id column="bk_id" property="bkId" jdbcType="INTEGER"/>
+        <result column="feature_id" property="featureId" jdbcType="INTEGER"/>
+        <result column="bk_group_id" property="bkGroupId" jdbcType="VARCHAR"/>
+        <result column="yryd_id" property="yrydId" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="role_id" property="roleId" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="reason" property="reason" jdbcType="VARCHAR"/>
+        <result column="user" property="user" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="local" property="local" jdbcType="BIT"/>
+        <result column="image_path" property="imagePath" jdbcType="VARCHAR"/>
+        <result column="idcard" property="idcard" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="enabled" property="enabled" jdbcType="BIT"/>
+        <result column="on_time" property="onTime" jdbcType="TIMESTAMP"/>
+        <result column="off_time" property="offTime" jdbcType="TIMESTAMP"/>
+        <result column="cancel_user" property="cancelUser" jdbcType="VARCHAR"/>
+        <result column="cancel_reason" property="cancelReason" jdbcType="VARCHAR"/>
+        <result column="cancel_time" property="cancelTime" jdbcType="TIMESTAMP"/>
+        <result column="comments" property="comments" jdbcType="VARCHAR"/>
+        <result column="context" property="context" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    bk_id, feature_id, bk_group_id, yryd_id, user_id, role_id, name, reason, user, contact, 
+    local, image_path, idcard, type, enabled, on_time, off_time, cancel_user, cancel_reason, 
+    cancel_time, comments, context
+  </sql>
+    <select id="listAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_bukong
+    </select>
+
+
+    <resultMap id="BuKongDTO" type="com.ferret.dto.BuKongDTO" extends="BaseResultMap">
+        <association property="info" javaType="BuKongInfo" resultMap="com.ferret.dao.BuKongInfoMapper.BaseResultMap"
+                     columnPrefix="i_"/>
+    </resultMap>
+    <!-- 根据布控和报警信息,以及布控人信息获取对应的数据 -->
+    <select id="listBySearch" resultMap="BuKongDTO">
+        SELECT
+        bk.*,
+        ra.amount,
+        bi.id as i_id,
+        bi.idcard as i_idcard,
+        bi.name as i_name,
+        bi.gender as i_gender,
+        bi.address as i_address,
+        bi.telephone as i_telephone,
+        bi.relative as i_relative,
+        bi.residence as i_residence,
+        bi.room_number as i_room_number,
+        bi.residence_type as i_residence_type,
+        bi.landlord_idcard as i_landlord_idcard,
+        bi.job i_job,
+        bi.convenience_card_existed as i_convenience_card_existed,
+        bi.temp_residence_existed as i_temp_residence_existed,
+        bi.temp_residence_number as i_temp_residence_number,
+        bi.from_and_when as i_from_and_when,
+        bi.go_and_when as i_go_and_when,
+        bi.transport as i_transport,
+        bi.date_checked as i_date_checked,
+        bi.police_checked as i_police_checked,
+        bi.comment as i_comment,
+        bi.image_path as i_image_path
+        FROM
+        (
+        SELECT  tb.bk_id, tb.feature_id, tb.bk_group_id, tb.yryd_id, tb.user_id, tb.role_id, tb.name, tb.reason, tb.user, tb.contact, 
+    	tb.local, tb.idcard, tb.type, tb.enabled, tb.on_time, tb.off_time, tb.cancel_user, tb.cancel_reason, 
+    	tb.cancel_time, tb.comments, tb.context,tbi.bk_img_path as image_path
+        FROM tb_bukong tb, tb_bukong_image tbi where tb.bk_id=tbi.bk_id 
+        <if test="bkGroupIds != null">
+            WHERE tb_bukong.bk_group_id IN
+            <foreach collection="bkGroupIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        group by tb.bk_id
+        ) bk
+        LEFT JOIN
+        (
+          SELECT bk_id, MAX(alarm_time) t, count(bk_id) amount
+          FROM tb_realtime_alarm
+          GROUP BY bk_id
+        ) ra
+        ON bk.bk_id = ra.bk_id
+        LEFT JOIN tb_bukong_info bi
+        ON bk.idcard = bi.idcard
+        <if test="filterAlarm">
+            WHERE ra.amount > 0
+        </if>
+        ORDER BY ra.t DESC
+    </select>
+
+    <select id="listByIds" resultMap="BaseResultMap" parameterType="java.util.Arrays">
+        select <include refid="Base_Column_List"/>
+        FROM tb_bukong
+        where bk_id IN
+        <foreach collection="array" open="(" separator="," close=")" item="item" >
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_bukong
+        where bk_id = #{bkId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_bukong
+    where bk_id = #{bkId,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.ferret.bean.BuKong">
+    insert into tb_bukong (bk_id, feature_id, bk_group_id, 
+      yryd_id, user_id, role_id, 
+      name, reason, user, 
+      contact, local, image_path, 
+      idcard, type, enabled, 
+      on_time, off_time, cancel_user, 
+      cancel_reason, cancel_time, comments, 
+      context)
+    values (#{bkId,jdbcType=INTEGER}, #{featureId,jdbcType=INTEGER}, #{bkGroupId,jdbcType=VARCHAR}, 
+      #{yrydId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{roleId,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{user,jdbcType=VARCHAR}, 
+      #{contact,jdbcType=VARCHAR}, #{local,jdbcType=BIT}, #{imagePath,jdbcType=VARCHAR}, 
+      #{idcard,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{enabled,jdbcType=BIT}, 
+      #{onTime,jdbcType=TIMESTAMP}, #{offTime,jdbcType=TIMESTAMP}, #{cancelUser,jdbcType=VARCHAR}, 
+      #{cancelReason,jdbcType=VARCHAR}, #{cancelTime,jdbcType=TIMESTAMP}, #{comments,jdbcType=VARCHAR}, 
+      #{context,jdbcType=VARCHAR})
+  </insert>
+
+    <insert id="insertSelective" parameterType="com.ferret.bean.BuKong">
+        insert into tb_bukong
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bkId != null">
+                bk_id,
+            </if>
+            <if test="featureId != null">
+                feature_id,
+            </if>
+            <if test="bkGroupId != null">
+                bk_group_id,
+            </if>
+            <if test="yrydId != null">
+                yryd_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="user != null">
+                user,
+            </if>
+            <if test="contact != null">
+                contact,
+            </if>
+            <if test="local != null">
+                local,
+            </if>
+            <if test="imagePath != null">
+                image_path,
+            </if>
+            <if test="idcard != null">
+                idcard,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="onTime != null">
+                on_time,
+            </if>
+            <if test="offTime != null">
+                off_time,
+            </if>
+            <if test="cancelUser != null">
+                cancel_user,
+            </if>
+            <if test="cancelReason != null">
+                cancel_reason,
+            </if>
+            <if test="cancelTime != null">
+                cancel_time,
+            </if>
+            <if test="comments != null">
+                comments,
+            </if>
+            <if test="context != null">
+                context,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bkId != null">
+                #{bkId,jdbcType=INTEGER},
+            </if>
+            <if test="featureId != null">
+                #{featureId,jdbcType=INTEGER},
+            </if>
+            <if test="bkGroupId != null">
+                #{bkGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="yrydId != null">
+                #{yrydId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="user != null">
+                #{user,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="local != null">
+                #{local,jdbcType=BIT},
+            </if>
+            <if test="imagePath != null">
+                #{imagePath,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null">
+                #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=BIT},
+            </if>
+            <if test="onTime != null">
+                #{onTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="offTime != null">
+                #{offTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cancelUser != null">
+                #{cancelUser,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelReason != null">
+                #{cancelReason,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelTime != null">
+                #{cancelTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="comments != null">
+                #{comments,jdbcType=VARCHAR},
+            </if>
+            <if test="context != null">
+                #{context,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ferret.bean.BuKong">
+        update tb_bukong
+        <set>
+            <if test="featureId != null">
+                feature_id = #{featureId,jdbcType=INTEGER},
+            </if>
+            <if test="bkGroupId != null">
+                bk_group_id = #{bkGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="yrydId != null">
+                yryd_id = #{yrydId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null">
+                reason = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="user != null">
+                user = #{user,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                contact = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="local != null">
+                local = #{local,jdbcType=BIT},
+            </if>
+            <if test="imagePath != null">
+                image_path = #{imagePath,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null">
+                idcard = #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=BIT},
+            </if>
+            <if test="onTime != null">
+                on_time = #{onTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="offTime != null">
+                off_time = #{offTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cancelUser != null">
+                cancel_user = #{cancelUser,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelReason != null">
+                cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelTime != null">
+                cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="comments != null">
+                comments = #{comments,jdbcType=VARCHAR},
+            </if>
+            <if test="context != null">
+                context = #{context,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where bk_id = #{bkId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ferret.bean.BuKong">
+    update tb_bukong
+    set feature_id = #{featureId,jdbcType=INTEGER},
+      bk_group_id = #{bkGroupId,jdbcType=VARCHAR},
+      yryd_id = #{yrydId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      role_id = #{roleId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      user = #{user,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      local = #{local,jdbcType=BIT},
+      image_path = #{imagePath,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      enabled = #{enabled,jdbcType=BIT},
+      on_time = #{onTime,jdbcType=TIMESTAMP},
+      off_time = #{offTime,jdbcType=TIMESTAMP},
+      cancel_user = #{cancelUser,jdbcType=VARCHAR},
+      cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+      cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+      comments = #{comments,jdbcType=VARCHAR},
+      context = #{context,jdbcType=VARCHAR}
+    where bk_id = #{bkId,jdbcType=INTEGER}
+  </update>
+
+    <!-- 将所有idcard为空记录更新为图片名称 -->
+    <update id="updateByImageNameSelective">
+    update tb_bukong
+    set
+      idcard = REPLACE(SUBSTRING_INDEX(image_path,'\\',-1),CONCAT('.',SUBSTRING_INDEX(image_path,'.',-1)), ''),
+      on_time = NOW()
+    where idcard is NULL
+    </update>
+
+</mapper>
