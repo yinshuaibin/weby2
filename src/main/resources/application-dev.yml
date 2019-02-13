@@ -115,19 +115,6 @@ dataPush:
   alarmPushUrl: http://127.0.0.1:8093/face/t111
   # 实时抓拍推送url
   realTimePushUrl: http://127.0.0.1:8093/face/t111
-#同步市局身份接口url
-synchronizeLdentityInterfaceUrl: http://10.56.12.156:8077/searchData
-#异步省厅身份接口
-asynchronousLdentityInterfaceUrl: http://10.56.10.211:8090/face/sendTask
-#异步省厅身份获取接口
-getAsynchronousLdentityInterfaceUrl: http://10.56.10.211:8090/face/faceCollect
-
-#静态查询所需数据
-static:
-  #河南省厅常口静态接口
-  HNSTStatic: http://10.56.12.156:8077/searchStatic
-  #刑侦局前科静态接口
-  XZJStatic: http://10.57.86.194:8077/searchStatic
 #mqtt配置
 mqtt:
   ip: ${common.ip}
